@@ -2,8 +2,9 @@
 transform_legacy_attribute_methods 
 ========================
 
-A Rails plugin that allows you to transform your ActiveRecord model's "legacy" attribute names 
-into attribute aliases that can be used in dynamic finders and attribute hashes. 
+A Rails plugin that allows you to transform your ActiveRecord model's "legacy" column names 
+into conventional attribute aliases and query methods that can then be used in dynamic 
+finders and attribute hashes. 
 
 Usefull when you want to follow Rails' naming conventions but your database doesn't.
 
@@ -47,9 +48,10 @@ Your code:
      bill.attributes = {
        :from => 'Whole Foods',
        :amount => 300,
-       bill_late => true       
+       :bill_late => true       
      }
 
+     s = bill.amount_before_type_cast
      bill.pay! if bill.amount?
 
 ========================
@@ -62,6 +64,15 @@ end
 
 transform_legacy_attribute_methods requires a transformer to convert your column names. 
 A transformer is either a method of the String class -given via a Symbol or String, or a Proc. 
+
+Transformation gives you the following accessors: 
+
+- column= 
+- column
+- column?
+- column_before_type_cast
+
+You can also use column in in dynamic finders and attribute hashes.
 
 A transformer can be specified as the 1st argument or via a block:
 
