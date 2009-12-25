@@ -1,0 +1,12 @@
+---
+The Palm:
+ bill_from: The Palm
+ bill_is_late: false
+ bill_amount_due: 235.20
+ person_id: 1
+
+Adelitas:
+ bill_from: Adelitas
+ bill_is_late: true
+ bill_amount_due: 12_500
+ person_id: 1

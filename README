@@ -1,0 +1,53 @@
+========================
+transform_legacy_attribute_methods 
+========================
+
+Makes attribute aliases that can be used in dynamic finders and
+attribute hashes. 
+
+Usefull when you want to follow Rails' naming conventions but your database doesn't.
+
+========================
+Examples
+========================
+	
+Your table definitions:
+
+     create table Person (
+       FirstName varchar(32),
+       LastName varchar(32),
+       Birthday date
+     )
+
+    create table bills (
+      bill_from varchar(32),
+      bill_amount decimal(2,2),
+      bill_late tinyint
+    )
+
+Your model:
+
+    class Person < ActiveRecord::Base
+      set_table_name 'Person'
+      transform_legacy_attribute_methods
+    end
+  
+    class Bill< ActiveRecord::Base
+      transform_legacy_attribute_methods(:skip => 'bill_late')  { |name| name.sub /^bill_/, '' } 
+    end
+   
+Your code:
+
+     person = Person.new( :first_name => 'Mac', :last_name => 'Dre' )
+     bill = person.bills.build( :from => 'Coco County', :amount => 35_000.45 ) 
+
+     person = Person.find_by_first_name_and_last_name('Viviane',  'Castro')
+
+     bill=Bill.new
+     bill.attributes = {
+       :from => 'Whole Foods',
+       :amount => 300,
+       bill_late => true       
+     }
+
+     bill.pay! if bill.amount?
