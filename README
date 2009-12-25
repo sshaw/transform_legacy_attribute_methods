@@ -2,8 +2,8 @@
 transform_legacy_attribute_methods 
 ========================
 
-Makes attribute aliases that can be used in dynamic finders and
-attribute hashes. 
+A Rails plugin that allows you to transform your ActiveRecord model's "legacy" attribute names 
+into attribute aliases that can be used in dynamic finders and attribute hashes. 
 
 Usefull when you want to follow Rails' naming conventions but your database doesn't.
 
@@ -29,7 +29,7 @@ Your model:
 
     class Person < ActiveRecord::Base
       set_table_name 'Person'
-      transform_legacy_attribute_methods
+      transform_legacy_attribute_methods #use default = TransformLegacyAttributeMethods.transformer
     end
   
     class Bill< ActiveRecord::Base
@@ -51,3 +51,30 @@ Your code:
      }
 
      bill.pay! if bill.amount?
+
+========================
+Usage
+========================
+
+class YourModel < ActiveRecord::Base
+  transform_legacy_attribute_methods(*args, &block)
+end
+
+transform_legacy_attribute_methods requires a transformer to convert your column names. 
+A transformer is either a method of the String class -given via a Symbol or String, or a Proc. 
+
+A transformer can be specified as the 1st argument or via a block:
+
+transform_legacy_attribute_methods( :titleize ) 
+transform_legacy_attribute_methods { |column_name| column_name.underscore }
+transform_legacy_attribute_methods( 'downcase' )
+transform_legacy_attribute_methods( lambda { |column_name| column_name.chop } )
+
+If no transformer is provided TransformLegacyAttributeMethods.transformer will be used.
+By default, this is set to :underscore.
+
+All other arguments are options. Currently the only option is :skip, which specifies 
+column(s) that should not be transformed. :skip can be a String, Symbol, or an Array:
+
+transform_legacy_attribute_methods( :skip => %w|columnA columnB columnC| )
+transform_legacy_attribute_methods( :titleize, :skip => :some_column )
