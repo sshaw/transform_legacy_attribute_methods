@@ -51,15 +51,22 @@ class TestTransformLegacyAttributeMethods < Test::Unit::TestCase
 
     assert_equal 'Cat', person.LastName
     assert_equal 'Cat', person.last_name
+    assert_equal 'Cat', person[:last_name]
     assert !person.first_name?
 
     person.FirstName = 'J'
     assert person.first_name?
     assert_equal 'J', person.first_name
+    assert_equal 'J', person[:first_name]
+    assert_equal 'J', person.attributes['first_name']
+
     assert_equal '2000-1-1', person.DOB
 
     person.attributes = { :first_name => 'Seeemji' }
+
     assert_equal 'Seeemji', person.first_name
+    assert_equal 'Seeemji', person[:first_name]
+    assert_equal 'Seeemji', person.attributes['first_name']
     assert_equal 'Seeemji', person.FirstName
 
     assert_raises(NoMethodError) { person.dob }
